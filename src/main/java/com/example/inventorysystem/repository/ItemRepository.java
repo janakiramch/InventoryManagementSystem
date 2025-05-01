@@ -11,6 +11,6 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
     List<Item> findByCategory(String category);
     List<Item> findByQuantityGreaterThanEqual(int quantity);
 
-    void deleteByQuantity(int quantity);
-    void deleteByQuantityLessThanEqual(int quantity);
+    //void deleteByQuantity(int quantity);
+    List<Item> findByQuantity(int quantity);
 }

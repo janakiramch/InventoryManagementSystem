@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/items" , produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping("/items")
 public class ItemController {
 
     private final ItemService itemService;
@@ -42,8 +42,8 @@ public class ItemController {
         );
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<ItemDto>> getItemById(int id){
+    @GetMapping("/item/{id}")
+    public ResponseEntity<ApiResponse<ItemDto>> getItemById(@PathVariable int id){
         return ResponseEntity.ok(
                 new ApiResponse<>(true, "Item retrieved by Id",
                         itemService.getItemById(id))
@@ -82,8 +82,7 @@ public class ItemController {
     }
 
     @DeleteMapping("/quantity/zero")
-    public ResponseEntity<ApiResponse<String>> deleteZeroQuantityItems() {
-        itemService.deleteItemsWithZeroQuantity();
-        return ResponseEntity.ok(new ApiResponse<>(true, "Deleted all items with quantity = 0"));
+    public ResponseEntity<?> deleteZeroQuantityItems() {
+        return ResponseEntity.ok(itemService.deleteItemsWithZeroQuantity());
     }
 }

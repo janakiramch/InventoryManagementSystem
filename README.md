@@ -62,8 +62,11 @@ public class ApiResponse<T> {
 All responses are wrapped in a consistent ApiResponse format, which includes:
 
 success: A boolean indicating the success of the request.
+
 message: A message providing additional information.
+
 data: The data returned from the request (could be null in some cases).
+
 ---
 
 ## API Endpoints
@@ -115,6 +118,29 @@ Base URL : http://localhost:8080
 - **URL:** `/items/get-all-items`
 - **Method:** GET
 - **Response:** List of all items.
+- {
+- "success": true,
+  "message": "All items",
+  "data" :
+- [
+ {
+    "id": 1,
+    "name": "Laptop",
+    "price": 1200.0,
+    "category": "Electronics",
+    "quantity": 10
+  },
+  {
+    "id": 2,
+    "name": "Mouse",
+    "price": 20.0,
+    "category": "Electronics",
+    "quantity": 50
+  }
+  
+]
+}
+---
 
 ---
 
@@ -123,6 +149,13 @@ Base URL : http://localhost:8080
 - **Method:** GET
 - **Path Variable:** `id` (int)
 - **Response:** Single item with matching ID.
+- {
+  "id": 1,
+  "name": "Laptop",
+  "price": 1200.0,
+  "category": "Electronics",
+  "quantity": 10
+}
 
 ---
 
@@ -130,7 +163,20 @@ Base URL : http://localhost:8080
 - **URL:** `/items/update/{id}`
 - **Method:** PUT
 - **Request Body:** Updated `ItemDto`
+- {
+  "name": "Gaming Laptop",
+  "price": 1500.00,
+  "category": "Electronics",
+  "quantity": 8
+}
 - **Response:** Updated item.
+- {
+  "id": 1,
+  "name": "Gaming Laptop",
+  "price": 1500.0,
+  "category": "Electronics",
+  "quantity": 8
+}
 
 ---
 
@@ -152,6 +198,16 @@ Base URL : http://localhost:8080
 - **URL:** `/items/category/{category}`
 - **Method:** GET
 - **Response:** List of items filtered by category.
+- [
+  {
+    "id": 1,
+    "name": "Laptop",
+    "price": 1200.0,
+    "category": "Electronics",
+    "quantity": 10
+  }
+  
+]
 
 ---
 
@@ -159,6 +215,15 @@ Base URL : http://localhost:8080
 - **URL:** `/items/quantity/{quantity}`
 - **Method:** GET
 - **Response:** Items with quantity >= specified value.
+- [
+  {
+     "id": 2,
+     "name": "Mouse",
+     "price": 20.0,
+     "category": "Electronics",
+     "quantity": 50
+   }
+- ]
 
 ---
 
@@ -166,6 +231,15 @@ Base URL : http://localhost:8080
 - **URL:** `/items/increment/{id}/quantity/{quantity}`
 - **Method:** PUT
 - **Response:** Updated item with increased quantity.
+- [
+- {
+  "id": 1,
+  "name": "Laptop",
+  "price": 1200.0,
+  "category": "Electronics",
+  "quantity": 15
+}
+]
 
 ---
 
@@ -174,7 +248,23 @@ Base URL : http://localhost:8080
 - **Method:** PUT
 - **Response:**
   - If quantity > 0, returns updated item.
+  - {
+  "success": true,
+  "message": "Item Quantity decremented",
+  "data": {
+    "id": 1,
+    "name": "Laptop",
+    "price": 1200.0,
+    "category": "Electronics",
+    "quantity": 5
+  }
+}
   - If quantity <= 0, item is deleted and confirmation is sent.
+  - {
+  "success": true,
+  "message": "Item Quantity Decremented and inventory is empty now. Item Deleted",
+  "data": null
+}
 
 ---
 
@@ -201,7 +291,7 @@ OR
 ## Notes
 - Uses `@Builder` and Lombok to reduce boilerplate.
 - Standardized API responses using `ApiResponse<T>`.
-- Graceful error handling using custom exception `ResourceNotFoundException`.
+- Graceful error handling using custom exception `ResourceNotFoundException` & Global Exception Handler.
 
 ---
 

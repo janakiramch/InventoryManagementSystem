@@ -8,6 +8,7 @@ import com.example.inventorysystem.response.ApiResponse;
 import com.example.inventorysystem.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class ItemServiceImpl implements ItemService {
 
     private ItemDto mapToDto(Item item){
         return ItemDto.builder()
+                .id(item.getId())
                 .name(item.getName())
                 .price(item.getPrice())
                 .category(item.getCategory())
@@ -34,6 +36,7 @@ public class ItemServiceImpl implements ItemService {
 
     private Item mapToEntity(ItemDto dto){
         return Item.builder()
+                .id(dto.getId())
                 .name(dto.getName())
                 .price(dto.getPrice())
                 .category(dto.getCategory())
@@ -72,7 +75,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void deleteItem(int id) {
-        itemRepository.deleteById(id);
+        Item item = itemRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Item Not Found with Id: " + id));
+        itemRepository.delete(item);
     }
 
     @Override
@@ -91,8 +95,14 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public void deleteItemsWithZeroQuantity() {
-        itemRepository.deleteByQuantity(0);
+    public ApiResponse<?> deleteItemsWithZeroQuantity() {
+        List<Item> items = itemRepository.findByQuantity(0);
+        if (!items.isEmpty()) {
+            itemRepository.deleteAll(items);
+            return new ApiResponse<>(true, "Items with zero quantity removed from Inventory");
+        } else {
+            return new ApiResponse<>(false, "No items with zero quantity found.");
+        }
     }
 
 

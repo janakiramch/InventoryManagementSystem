@@ -16,8 +16,8 @@ public interface ItemService {
     List<ItemDto> getItemsByCategory(String category);
     List<ItemDto> getItemsByThresholdQuantity(int quantity);
 
-    void deleteItemsWithZeroQuantity();
-
     ItemDto incrementItemQuantity(int id, int quantity);
     ApiResponse<?> decrementItemQuantity(int id, int quantity);
+
+    ApiResponse<?> deleteItemsWithZeroQuantity();
 }
